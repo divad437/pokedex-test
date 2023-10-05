@@ -6,7 +6,7 @@ from .views import PokemonTeamViewSet
 app_name = 'team'
 
 router = DefaultRouter()
-router.register(r'', PokemonTeamViewSet, basename='team')
+router.register('', PokemonTeamViewSet, basename='team')
 
 urlpatterns = [
     path('', include(router.urls)),

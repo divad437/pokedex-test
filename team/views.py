@@ -29,11 +29,21 @@ from .serializers import PokemonTeamSerializer
     destroy=extend_schema(
         description="API endpoint to delete a specific pokemon team. It's horrible"
     ),
+    assign_pokemon=extend_schema(
+        description="API endpoint to assign a pokemon to a team."
+                    " Need a pokemon_id in the request body and "
+                    "a team_id in the url and name of the pokemon team"
+    ),
+    remove_pokemon=extend_schema(
+        description="API endpoint to remove a pokemon from a team."
+                    "Need a pokemon_id in the request body and"
+                    "a team_id in the url and name of the pokemon team"
+    ),
 )
 class PokemonTeamViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PokemonTeamSerializer
-    filter_backends = [DjangoFilterBackend]
+    # filter_backends = [DjangoFilterBackend]
 
     # filterset_class = PokemonTeamFilter
 
