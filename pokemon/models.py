@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from pokedex.models import PokedexCreature
+from pokemon_object.models import PokemonObject
 
 
 class Pokemon(models.Model):
@@ -27,6 +28,13 @@ class Pokemon(models.Model):
 
     level = models.PositiveSmallIntegerField(default=1)
     experience = models.PositiveIntegerField(default=0)
+
+    favorite_object = models.ForeignKey(
+        PokemonObject,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     def clean(self):
         """

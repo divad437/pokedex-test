@@ -1,3 +1,5 @@
+import random
+
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import extend_schema_view
 from rest_framework import status
@@ -6,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from pokemon_object.models import PokemonObject
 from .filters import PokemonFilter
 from .models import Pokemon
 from .serializers import PokemonDetailsSerializer
@@ -36,6 +39,18 @@ class PokemonViewSet(ModelViewSet):
     queryset = Pokemon.objects.all().order_by("pokedex_creature__ref_number")
     serializer_class = PokemonSerializer
     filterset_class = PokemonFilter
+
+    def get_queryset(self):
+        return self.queryset.filter(trainer=self.request.user).order_by("pokedex_creature__ref_number")
+
+    def perform_create(self, serializer):
+        # Attribuez un objet préféré au Pokémon créé au hasard depuis la liste d'objets.
+        queryset = PokemonObject.objects.all()
+        if queryset.exists():
+            random_favorite_object = random.choice(queryset)
+            serializer.save(trainer=self.request.user, favorite_object=random_favorite_object)
+        else:
+            serializer.save(trainer=self.request.user)
 
     def get_serializer_class(self):
         if self.action == "retrieve":
