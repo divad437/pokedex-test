@@ -37,8 +37,6 @@ class PokemonTeamViewSet(viewsets.ModelViewSet):
 
     # filterset_class = PokemonTeamFilter
 
-
-
     def get_queryset(self):
         return PokemonTeam.objects.filter(trainer=self.request.user)
 
