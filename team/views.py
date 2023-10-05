@@ -3,6 +3,8 @@ from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import action
+from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema_view
 
 from pokemon.models import Pokemon
 from .filters import PokemonTeamFilter
@@ -10,11 +12,32 @@ from .models import PokemonTeam, PokemonTeamPokemon
 from .serializers import PokemonTeamSerializer
 
 
+@extend_schema_view(
+    create=extend_schema(
+        description="API endpoint to create a pokemon team"
+    ),
+    list=extend_schema(
+        description="API endpoint to get a list of pokemon teams, with filtering options"
+    ),
+    retrieve=extend_schema(
+        description="API endpoint to retrieve a specific pokemon team, which gives on him detailed informations"
+    ),
+    update=extend_schema(description="API endpoint to modify a specific pokemon team"),
+    partial_update=extend_schema(
+        description="API endpoint to partially modify a specific pokemon team"
+    ),
+    destroy=extend_schema(
+        description="API endpoint to delete a specific pokemon team. It's horrible"
+    ),
+)
 class PokemonTeamViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PokemonTeamSerializer
     filter_backends = [DjangoFilterBackend]
+
     # filterset_class = PokemonTeamFilter
+
+
 
     def get_queryset(self):
         return PokemonTeam.objects.filter(trainer=self.request.user)
@@ -51,7 +74,6 @@ class PokemonTeamViewSet(viewsets.ModelViewSet):
             return super().destroy(request, *args, **kwargs)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
-
 
     @action(detail=True, methods=['post'], url_path='assign-pokemon')
     def assign_pokemon(self, request, pk=None):
