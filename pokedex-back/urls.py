@@ -24,6 +24,7 @@ urlpatterns = [
     path("", lambda r: redirect("api/swagger/")),
     path("pokedex/", include("pokedex.urls")),
     path("pokemon-object/", include("pokemon_object.urls")),
+    path("team/", include("team.urls")),
 ]
 
 if "pokemon" in settings.INSTALLED_APPS:
